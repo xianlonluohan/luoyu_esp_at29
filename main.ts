@@ -40,7 +40,7 @@ namespace emakefun {
         const targets = [success_target, "\r\nERROR\r\n", "busy p...\r\n"];
         serial.writeString(command + "\r\n");
         basic.showString("!0:" + targets.length);
-        let result = emakefun.multiFindUtil(targets.length, timeout_ms);
+        let result = emakefun.multiFindUtil(3, 200);
         basic.showString("!:" + result.toString());
         return result == 0;
     }
