@@ -43,7 +43,7 @@ int16_t multiFindUtil(const String* targets, const uint16_t targets_size, const 
         if (current_byte == byte_target[offset]) {
           offset += 1;
           if (offset == byte_target.size()) {
-            return 99;
+            return i;
           }
           continue;
         }
