@@ -21,7 +21,7 @@ int multiFindUtil(int targets_size, int timeout_ms) {
   if (targets_size == 0 || timeout_ms < 0) {
     return -1;
   }
-  return timeout_ms;
+  return targets_size;
 
   // std::vector<std::vector<uint8_t>> byte_targets;
   // for (uint16_t i = 0; i < targets_size; i++) {
