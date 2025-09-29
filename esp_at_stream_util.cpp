@@ -36,14 +36,15 @@ int16_t multiFindUtil(const String* targets, const uint16_t targets_size, const 
     if (getMicroBit()->serial.isReadable()) {
       const uint8_t current_byte = getMicroBit()->serial.getc();
 
-      for (uint8_t i = 0; i < byte_targets.size(); i++) {
-        const auto& byte_target = byte_targets[i];
-        auto& offset = offsets[i];
+      // 修复：将内层循环变量 i 改为 j，避免变量名冲突
+      for (uint8_t j = 0; j < byte_targets.size(); j++) {
+        const auto& byte_target = byte_targets[j];
+        auto& offset = offsets[j];
 
         if (current_byte == byte_target[offset]) {
           offset += 1;
           if (offset == byte_target.size()) {
-            return i;
+            return j;  // 返回正确的索引 j
           }
           continue;
         }
@@ -63,13 +64,13 @@ int16_t multiFindUtil(const String* targets, const uint16_t targets_size, const 
             break;
           }
           const uint16_t offset_diff = original_offset - offset;
-          uint16_t j = 0;
-          for (j = 0; j < offset; j++) {
-            if (byte_target[j] != byte_target[j + offset_diff]) {
+          uint16_t k = 0;  // 使用 k 避免变量名冲突
+          for (k = 0; k < offset; k++) {
+            if (byte_target[k] != byte_target[k + offset_diff]) {
               break;
             }
           }
-          if (j == offset) {
+          if (k == offset) {
             offset += 1;
             break;
           }
@@ -124,7 +125,7 @@ bool singleFindUtil(const String target, const int32_t timeout_ms) {
           break;
         }
         const uint16_t offset_diff = original_offset - offset;
-        uint16_t j = 0;
+        uint16_t j = 0;  // 使用 j 避免变量名冲突
         for (j = 0; j < offset; j++) {
           if (byte_target[j] != byte_target[j + offset_diff]) {
             break;
