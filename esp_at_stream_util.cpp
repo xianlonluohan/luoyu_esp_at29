@@ -17,7 +17,7 @@ namespace emakefun {
  * 同时搜索多个目标字符串 - 使用 getMicroBit()->serial 逐个字节读取
  */
 //%
-int multiFindUtil(int targets_size, int timeout_ms) {
+int multiFindUtil(const int targets_size, const int timeout_ms) {
   if (targets_size == 0 || timeout_ms < 0) {
     return -1;
   }
