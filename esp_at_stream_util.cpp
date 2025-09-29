@@ -21,68 +21,68 @@ int16_t multiFindUtil(const String* targets, const uint16_t targets_size, const 
   if (targets == NULL || targets_size == 0 || timeout_ms < 0) {
     return -1;
   }
-  getMicroBit()->display.scroll("T1:" + targets_size.toString());
+  return targets_size;
 
-  std::vector<std::vector<uint8_t>> byte_targets;
-  for (uint16_t i = 0; i < targets_size; i++) {
-    std::string target_str(MSTR(targets[i]).toCharArray());
-    std::vector<uint8_t> byte_target(target_str.begin(), target_str.end());
-    byte_targets.push_back(byte_target);
-  }
-  getMicroBit()->display.scroll("T2:" + byte_targets.size().toString());
+  // std::vector<std::vector<uint8_t>> byte_targets;
+  // for (uint16_t i = 0; i < targets_size; i++) {
+  //   std::string target_str(MSTR(targets[i]).toCharArray());
+  //   std::vector<uint8_t> byte_target(target_str.begin(), target_str.end());
+  //   byte_targets.push_back(byte_target);
+  // }
+  // getMicroBit()->display.scroll("T2:" + byte_targets.size().toString());
 
-  std::vector<uint16_t> offsets(byte_targets.size(), 0);
-  const uint64_t end_time = system_timer_current_time() + timeout_ms;
+  // std::vector<uint16_t> offsets(byte_targets.size(), 0);
+  // const uint64_t end_time = system_timer_current_time() + timeout_ms;
 
-  do {
-    if (getMicroBit()->serial.isReadable()) {
-      const uint8_t current_byte = getMicroBit()->serial.getc();
+  // do {
+  //   if (getMicroBit()->serial.isReadable()) {
+  //     const uint8_t current_byte = getMicroBit()->serial.getc();
 
-      // 修复：将内层循环变量 i 改为 j，避免变量名冲突
-      for (uint8_t j = 0; j < byte_targets.size(); j++) {
-        const auto& byte_target = byte_targets[j];
-        auto& offset = offsets[j];
+  //     // 修复：将内层循环变量 i 改为 j，避免变量名冲突
+  //     for (uint8_t j = 0; j < byte_targets.size(); j++) {
+  //       const auto& byte_target = byte_targets[j];
+  //       auto& offset = offsets[j];
 
-        if (current_byte == byte_target[offset]) {
-          offset += 1;
-          if (offset == byte_target.size()) {
-            getMicroBit()->display.scroll("T3:" + j.toString());
-            return j;  // 返回正确的索引 j
-          }
-          continue;
-        }
+  //       if (current_byte == byte_target[offset]) {
+  //         offset += 1;
+  //         if (offset == byte_target.size()) {
+  //           getMicroBit()->display.scroll("T3:" + j.toString());
+  //           return j;  // 返回正确的索引 j
+  //         }
+  //         continue;
+  //       }
 
-        if (offset == 0) {
-          continue;
-        }
+  //       if (offset == 0) {
+  //         continue;
+  //       }
 
-        const uint16_t original_offset = offset;
-        while (offset > 0) {
-          offset -= 1;
-          if (current_byte != byte_target[offset]) {
-            continue;
-          }
-          if (offset == 0) {
-            offset += 1;
-            break;
-          }
-          const uint16_t offset_diff = original_offset - offset;
-          uint16_t k = 0;  // 使用 k 避免变量名冲突
-          for (k = 0; k < offset; k++) {
-            if (byte_target[k] != byte_target[k + offset_diff]) {
-              break;
-            }
-          }
-          if (k == offset) {
-            offset += 1;
-            break;
-          }
-        }
-      }
-    }
-  } while (system_timer_current_time() < end_time);
+  //       const uint16_t original_offset = offset;
+  //       while (offset > 0) {
+  //         offset -= 1;
+  //         if (current_byte != byte_target[offset]) {
+  //           continue;
+  //         }
+  //         if (offset == 0) {
+  //           offset += 1;
+  //           break;
+  //         }
+  //         const uint16_t offset_diff = original_offset - offset;
+  //         uint16_t k = 0;  // 使用 k 避免变量名冲突
+  //         for (k = 0; k < offset; k++) {
+  //           if (byte_target[k] != byte_target[k + offset_diff]) {
+  //             break;
+  //           }
+  //         }
+  //         if (k == offset) {
+  //           offset += 1;
+  //           break;
+  //         }
+  //       }
+  //     }
+  //   }
+  // } while (system_timer_current_time() < end_time);
 
-  return -1;
+  // return -1;
 }
 /**
  * 搜索单个目标字符串 - 使用 getMicroBit()->serial 逐个字节读取
