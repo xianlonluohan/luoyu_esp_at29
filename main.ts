@@ -40,7 +40,7 @@ namespace emakefun {
         const targets = [success_target, "\r\nERROR\r\n", "busy p...\r\n"];
         serial.writeString(command + "\r\n");
         basic.showString("!0:" + targets.length);
-        let result = emakefun.multiFindUtil(targets, targets.length, timeout_ms);
+        let result = emakefun.multiFindUtil(targets.length, timeout_ms);
         basic.showString("!:" + result.toString());
         return result == 0;
     }
@@ -281,7 +281,7 @@ namespace emakefun {
         }
         const targets = ["+MQTTPUB:OK", "+MQTTPUB:FAIL"];
         serial.writeBuffer(data_bytes);
-        if (emakefun.multiFindUtil(targets, targets.length, timeout_ms) != 0) {
+        if (emakefun.multiFindUtil(targets.length, timeout_ms) != 0) {
             throw "Error: MQTT publish content failed.";
         }
     }

@@ -8,7 +8,7 @@ declare namespace emakefun {
      */
     //% shim=emakefun::multiFindUtil
     //% blockHidden=true
-    function multiFindUtil(targets: string[], targets_size: number, timeout_ms: number): number;
+    function multiFindUtil(targets_size: number, timeout_ms: number): number;
 
     /**
      * Search for a single target string in the serial data stream.
