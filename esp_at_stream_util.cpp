@@ -21,6 +21,7 @@ int16_t multiFindUtil(const String* targets, const uint16_t targets_size, const 
   if (targets == NULL || targets_size == 0 || timeout_ms < 0) {
     return -1;
   }
+  getMicroBit()->display.scroll("T1:" + (int)targets_size);
 
   std::vector<std::vector<uint8_t>> byte_targets;
   for (uint16_t i = 0; i < targets_size; i++) {
@@ -28,6 +29,7 @@ int16_t multiFindUtil(const String* targets, const uint16_t targets_size, const 
     std::vector<uint8_t> byte_target(target_str.begin(), target_str.end());
     byte_targets.push_back(byte_target);
   }
+  getMicroBit()->display.scroll("T2:" + (int)byte_targets.size());
 
   std::vector<uint16_t> offsets(byte_targets.size(), 0);
   const uint64_t end_time = system_timer_current_time() + timeout_ms;
@@ -44,6 +46,7 @@ int16_t multiFindUtil(const String* targets, const uint16_t targets_size, const 
         if (current_byte == byte_target[offset]) {
           offset += 1;
           if (offset == byte_target.size()) {
+            getMicroBit()->display.scroll("T3:" + (int)j);
             return j;  // 返回正确的索引 j
           }
           continue;
