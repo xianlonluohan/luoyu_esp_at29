@@ -8,7 +8,7 @@ declare namespace emakefun {
      */
     //% shim=emakefun::multiFindUtil
     //% blockHidden=true
-    function multiFindUtil(targets_size: number, timeout_ms: number): number;
+    function multiFindUtil(targets_size: int32, timeout_ms: int32): number;
 
     /**
      * Search for a single target string in the serial data stream.
@@ -18,7 +18,7 @@ declare namespace emakefun {
      */
     //% shim=emakefun::singleFindUtil
     //% blockHidden=true
-    function singleFindUtil(target: string, timeout_ms: number): boolean;
+    function singleFindUtil(target: string, timeout_ms: int32): boolean;
 
     /**
      * Skip the next character and return true if it matches the target character.
@@ -28,7 +28,7 @@ declare namespace emakefun {
      */
     //% shim=emakefun::skipNext
     //% blockHidden=true
-    function skipNext(target: string, timeout_ms: number): boolean;
+    function skipNext(target: string, timeout_ms: int32): boolean;
 
     /**
      * Parse integers from serial data streams.
@@ -37,7 +37,7 @@ declare namespace emakefun {
      */
     //% shim=emakefun::parseNumber
     //% blockHidden=true
-    function parseNumber(timeout_ms: number): number;
+    function parseNumber(timeout_ms: int32): number;
 
     /**
      * Read from serial until delimiter is found.
@@ -47,7 +47,7 @@ declare namespace emakefun {
      */
     //% shim=emakefun::readUntil
     //% blockHidden=true
-    function readUntil(delimiter: string, timeout_ms: number): string;
+    function readUntil(delimiter: string, timeout_ms: int32): string;
 
     /**
      * Clear the serial receive buffer.
@@ -55,5 +55,5 @@ declare namespace emakefun {
      */
     //% shim=emakefun::emptyRx
     //% blockHidden=true
-    function emptyRx(timeout_ms: number): void;
+    function emptyRx(timeout_ms: int32): void;
 }
