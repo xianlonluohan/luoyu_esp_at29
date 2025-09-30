@@ -17,8 +17,8 @@ namespace emakefun {
  * 同时搜索多个目标字符串 - 使用 getMicroBit()->serial 逐个字节读取
  */
 //%
-int multiFindUtil(const String* targets, int targets_size, const int timeout_ms) {
-  if (targets_size == 0 || timeout_ms < 0) {
+int multiFindUtil(String* targets, int targets_size, int timeout_ms) {
+  if (targets == NULL || targets_size == 0 || timeout_ms < 0) {
     return -1;
   }
 
@@ -28,7 +28,6 @@ int multiFindUtil(const String* targets, int targets_size, const int timeout_ms)
     std::vector<uint8_t> byte_target(target_str.begin(), target_str.end());
     byte_targets.push_back(byte_target);
   }
-  getMicroBit()->display.scroll("T2:" + byte_targets.size().toString());
 
   std::vector<uint16_t> offsets(byte_targets.size(), 0);
   const uint64_t end_time = system_timer_current_time() + timeout_ms;
@@ -37,16 +36,14 @@ int multiFindUtil(const String* targets, int targets_size, const int timeout_ms)
     if (getMicroBit()->serial.isReadable()) {
       const uint8_t current_byte = getMicroBit()->serial.getc();
 
-      // 修复：将内层循环变量 i 改为 j，避免变量名冲突
-      for (uint8_t j = 0; j < byte_targets.size(); j++) {
-        const auto& byte_target = byte_targets[j];
-        auto& offset = offsets[j];
+      for (uint8_t i = 0; i < byte_targets.size(); i++) {
+        const auto& byte_target = byte_targets[i];
+        auto& offset = offsets[i];
 
         if (current_byte == byte_target[offset]) {
           offset += 1;
           if (offset == byte_target.size()) {
-            getMicroBit()->display.scroll("T3:" + j.toString());
-            return j;  // 返回正确的索引 j
+            return i;
           }
           continue;
         }
@@ -66,13 +63,13 @@ int multiFindUtil(const String* targets, int targets_size, const int timeout_ms)
             break;
           }
           const uint16_t offset_diff = original_offset - offset;
-          uint16_t k = 0;  // 使用 k 避免变量名冲突
-          for (k = 0; k < offset; k++) {
-            if (byte_target[k] != byte_target[k + offset_diff]) {
+          uint16_t j = 0;
+          for (j = 0; j < offset; j++) {
+            if (byte_target[j] != byte_target[j + offset_diff]) {
               break;
             }
           }
-          if (k == offset) {
+          if (j == offset) {
             offset += 1;
             break;
           }
@@ -127,7 +124,7 @@ bool singleFindUtil(const String target, const int32_t timeout_ms) {
           break;
         }
         const uint16_t offset_diff = original_offset - offset;
-        uint16_t j = 0;  // 使用 j 避免变量名冲突
+        uint16_t j = 0;
         for (j = 0; j < offset; j++) {
           if (byte_target[j] != byte_target[j + offset_diff]) {
             break;
