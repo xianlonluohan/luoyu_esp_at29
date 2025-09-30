@@ -19,22 +19,24 @@ namespace emakefun {
 //%
 int multiFindUtil(String* targets, int targets_size, int timeout_ms) {
   if (targets == NULL || targets_size == 0 || timeout_ms < 0) {
-    return -1;
+    return 98;
   }
 
-  std::vector<std::vector<uint8_t>> byte_targets;
+  std::vector<std::vector<char>> byte_targets;
   for (uint16_t i = 0; i < targets_size; i++) {
     std::string target_str(MSTR(targets[i]).toCharArray());
-    std::vector<uint8_t> byte_target(target_str.begin(), target_str.end());
+    std::vector<char> byte_target(target_str.begin(), target_str.end());
     byte_targets.push_back(byte_target);
   }
 
-  std::vector<uint16_t> offsets(byte_targets.size(), 0);
+  uint16_t* offsets = new uint16_t[targets_size];
+  memset(offsets, 0, sizeof(uint16_t) * targets_size);
+
   const uint64_t end_time = system_timer_current_time() + timeout_ms;
 
   do {
     if (getMicroBit()->serial.isReadable()) {
-      const uint8_t current_byte = getMicroBit()->serial.getc();
+      const char current_byte = getMicroBit()->serial.getc();
 
       for (uint8_t i = 0; i < byte_targets.size(); i++) {
         const auto& byte_target = byte_targets[i];
@@ -43,6 +45,7 @@ int multiFindUtil(String* targets, int targets_size, int timeout_ms) {
         if (current_byte == byte_target[offset]) {
           offset += 1;
           if (offset == byte_target.size()) {
+            delete[] offsets;
             return i;
           }
           continue;
@@ -53,27 +56,31 @@ int multiFindUtil(String* targets, int targets_size, int timeout_ms) {
         }
 
         const uint16_t original_offset = offset;
-        while (offset > 0) {
-          offset -= 1;
-          if (current_byte != byte_target[offset]) {
+        do {
+          --offset;
+
+          if (c != target[offset]) {
             continue;
           }
+
           if (offset == 0) {
-            offset += 1;
+            offset++;
             break;
           }
-          const uint16_t offset_diff = original_offset - offset;
+
+          auto offset_diff = original_offset - offset;
           uint16_t j = 0;
-          for (j = 0; j < offset; j++) {
-            if (byte_target[j] != byte_target[j + offset_diff]) {
+          for (j = 0; j < offset; ++j) {
+            if (target[j] != target[j + offset_diff]) {
               break;
             }
           }
+
           if (j == offset) {
-            offset += 1;
+            offset++;
             break;
           }
-        }
+        } while (offset > 0);
       }
     }
   } while (system_timer_current_time() < end_time);
