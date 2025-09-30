@@ -29,8 +29,7 @@ int multiFindUtil(String* targets, int targets_size, int timeout_ms) {
     byte_targets.push_back(byte_target);
   }
 
-  uint16_t* offsets = new uint16_t[targets_size];
-  memset(offsets, 0, sizeof(uint16_t) * targets_size);
+  std::vector<uint16_t> offsets(byte_targets.size(), 0);
 
   const uint64_t end_time = system_timer_current_time() + timeout_ms;
 
@@ -45,7 +44,6 @@ int multiFindUtil(String* targets, int targets_size, int timeout_ms) {
         if (current_byte == byte_target[offset]) {
           offset += 1;
           if (offset == byte_target.size()) {
-            delete[] offsets;
             return i;
           }
           continue;
