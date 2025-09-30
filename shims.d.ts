@@ -28,7 +28,7 @@ declare namespace emakefun {
      */
     //% shim=emakefun::skipNext
     //% blockHidden=true
-    function skipNext(target: string, timeout_ms: int32): boolean;
+    function skipNext(targets: string[], target: string, timeout_ms: int32): boolean;
 
     /**
      * Parse integers from serial data streams.
